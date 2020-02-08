@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalTech", "TalTech\TalTech.csproj", "{FD79342B-C02D-4D72-A6AC-FB997AB4A3FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalTech", "TalTech\TalTech.csproj", "{FD79342B-C02D-4D72-A6AC-FB997AB4A3FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ajalogi", "Ajalogi", "{6DD6F400-A520-4260-A918-E46601A2E6E5}"
+	ProjectSection(SolutionItems) = preProject
+		Time recording log week 1.xlsx = Time recording log week 1.xlsx
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
