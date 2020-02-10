@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TalTech.Models;
 using TalTech.Data;
 
-namespace TalTech
+namespace TalTech.Students
 {
     public class CreateModel : PageModel
     {

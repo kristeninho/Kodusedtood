@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TalTech.Data;
 using TalTech.Models;
 
-namespace TalTech
+namespace TalTech.Courses
 {
     public class CreateModel : PageModel
     {
-        //private readonly TalTechContext _context;
+        private readonly TalTechContext _context;
 
         public CreateModel(TalTechContext context)
         {

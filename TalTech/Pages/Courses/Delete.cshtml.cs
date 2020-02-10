@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using TalTech.Data;
 using TalTech.Models;
 
-namespace TalTech
+namespace TalTech.Courses
 {
     public class DeleteModel : PageModel
     {
-        //private readonly TalTech.Data.TalTechContext _context;
+        private readonly TalTech.Data.TalTechContext _context;
 
         public DeleteModel(TalTech.Data.TalTechContext context)
         {

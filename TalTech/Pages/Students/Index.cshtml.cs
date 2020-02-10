@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TalTech.Models;
 using TalTech.Data;
 
-namespace TalTech
+namespace TalTech.Students
 {
     public class IndexModel : PageModel
     {

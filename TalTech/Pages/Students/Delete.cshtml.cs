@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace TalTech
+namespace TalTech.Students
 {
     public class DeleteModel : PageModel
     {
