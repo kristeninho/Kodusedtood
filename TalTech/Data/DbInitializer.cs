@@ -10,7 +10,7 @@ namespace TalTech.Data
     {
         public static void Initialize(TalTechContext context)
         {
-            //context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
             // Look for any students.
             if (context.Students.Any())
