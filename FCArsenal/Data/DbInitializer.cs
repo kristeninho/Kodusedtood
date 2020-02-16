@@ -10,7 +10,7 @@ namespace FCArsenal.Data
     {
         public static void Initialize(FootballContext context)
         {
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
 
             // Look for any students.
             if (context.Players.Any())

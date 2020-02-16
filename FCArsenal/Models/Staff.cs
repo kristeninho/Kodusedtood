@@ -31,7 +31,7 @@ namespace FCArsenal.Models
             get { return LastName + ", " + FirstMidName; }
         }
 
-        public ICollection<TrainingAssignment> CourseAssignments { get; set; }
-        public TrainingAssignment OfficeAssignment { get; set; }
+        public ICollection<TrainingAssignment> TrainingAssignments { get; set; }
+        public OfficeAssignment OfficeAssignment { get; set; }
     }
 }
