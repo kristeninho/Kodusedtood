@@ -1,0 +1,30 @@
+﻿@model IEnumerable<FCArsenal.Models.FootballViewModels.SigningDateGroup>
+
+@{
+    ViewData["Title"] = "Player Statistics";
+}
+
+<h2>Player Statistics</h2>
+
+<table>
+    <tr>
+        <th>
+            Signing Date
+        </th>
+        <th>
+            Players
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SigningDate)
+            </td>
+            <td>
+                @item.PlayerCount
+            </td>
+        </tr>
+    }
+</table>

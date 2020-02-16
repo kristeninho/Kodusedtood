@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ajalogi", "Ajalogi", "{6DD6
 		Time recording log week 1.xlsx = Time recording log week 1.xlsx
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCArsenal", "FCArsenal\FCArsenal.csproj", "{6D225710-0360-4E7B-91DC-CA103A57416F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{FD79342B-C02D-4D72-A6AC-FB997AB4A3FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD79342B-C02D-4D72-A6AC-FB997AB4A3FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD79342B-C02D-4D72-A6AC-FB997AB4A3FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D225710-0360-4E7B-91DC-CA103A57416F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D225710-0360-4E7B-91DC-CA103A57416F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D225710-0360-4E7B-91DC-CA103A57416F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D225710-0360-4E7B-91DC-CA103A57416F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
