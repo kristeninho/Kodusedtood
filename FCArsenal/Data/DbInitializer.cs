@@ -1,6 +1,8 @@
 ﻿using FCArsenal.Models;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FCArsenal.Data
 {
@@ -33,40 +35,200 @@ namespace FCArsenal.Data
             }
             context.SaveChanges();
 
-            var courses = new Training[]
+            var staffs = new Staff[]
             {
-            new Training{TrainingID=1050,Title="Field practice",Credits=3},
-            new Training{TrainingID=4022,Title="Field practice",Credits=3},
-            new Training{TrainingID=4041,Title="Gym",Credits=3},
-            new Training{TrainingID=1045,Title="Stamina",Credits=4},
-            new Training{TrainingID=3141,Title="Sprints",Credits=4},
-            new Training{ TrainingID = 2021,Title="Tactics",Credits=3},
-            new Training{ TrainingID = 2042,Title="Gym",Credits=4}
+                new Staff { FirstMidName = "Kim",     LastName = "Abercrombie",
+                    HireDate = DateTime.Parse("1995-03-11") },
+                new Staff { FirstMidName = "Fadi",    LastName = "Fakhouri",
+                    HireDate = DateTime.Parse("2002-07-06") },
+                new Staff { FirstMidName = "Roger",   LastName = "Harui",
+                    HireDate = DateTime.Parse("1998-07-01") },
+                new Staff { FirstMidName = "Candace", LastName = "Kapoor",
+                    HireDate = DateTime.Parse("2001-01-15") },
+                new Staff { FirstMidName = "Roger",   LastName = "Zheng",
+                    HireDate = DateTime.Parse("2004-02-12") }
             };
-            foreach (Training c in courses)
+
+            foreach (Staff i in staffs)
+            {
+                context.Staffs.Add(i);
+            }
+            context.SaveChanges();
+
+            var departments = new Department[]
+            {
+                new Department { Name = "Grass Training Pitch", Budget = 350000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    StaffID  = staffs.Single( i => i.LastName == "Abercrombie").ID },
+                new Department { Name = "Artifical Grass Training Pitch", Budget = 100000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    StaffID  = staffs.Single( i => i.LastName == "Fakhouri").ID },
+                new Department { Name = "Gym", Budget = 350000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    StaffID  = staffs.Single( i => i.LastName == "Harui").ID },
+                new Department { Name = "Stadion",   Budget = 100000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    StaffID  = staffs.Single( i => i.LastName == "Kapoor").ID },
+                new Department { Name = "Tactics Class",   Budget = 200000,
+                    StartDate = DateTime.Parse("2009-07-12"),
+                    StaffID  = staffs.Single( i => i.LastName == "Zheng").ID }
+            };
+
+            foreach (Department d in departments)
+            {
+                context.Departments.Add(d);
+            }
+            context.SaveChanges();
+
+
+            var trainings = new Training[]
+            {
+            new Training{TrainingID=1050,Title="Field practice",Credits=3, DepartmentID = departments.Single( s => s.Name == "Grass Training Pitch").DepartmentID},
+            new Training{TrainingID=4022,Title="Field practice",Credits=3, DepartmentID = departments.Single( s => s.Name == "Artifical Grass Training Pitch").DepartmentID},
+            new Training{TrainingID=4041,Title="Gym",Credits=3, DepartmentID = departments.Single( s => s.Name == "Gym").DepartmentID},
+            new Training{TrainingID=1045,Title="Stamina",Credits=4, DepartmentID = departments.Single( s => s.Name == "Stadion").DepartmentID},
+            new Training{TrainingID=3141,Title="Sprints",Credits=4, DepartmentID = departments.Single( s => s.Name == "Stadion").DepartmentID},
+            new Training{ TrainingID = 2021,Title="Tactics",Credits=3, DepartmentID = departments.Single( s => s.Name == "Tactics Class").DepartmentID},
+            new Training{ TrainingID = 2042,Title="Gym",Credits=4, DepartmentID = departments.Single( s => s.Name == "Gym").DepartmentID}
+            };
+            foreach (Training c in trainings)
             {
                 context.Trainings.Add(c);
             }
             context.SaveChanges();
 
-            var enrollments = new Signing[]
+
+            var officeAssignments = new OfficeAssignment[]
+           {
+                new OfficeAssignment {
+                    StaffID = staffs.Single( i => i.LastName == "Fakhouri").ID,
+                    Location = "Smith 17" },
+                new OfficeAssignment {
+                    StaffID = staffs.Single( i => i.LastName == "Harui").ID,
+                    Location = "Gowan 27" },
+                new OfficeAssignment {
+                    StaffID = staffs.Single( i => i.LastName == "Kapoor").ID,
+                    Location = "Thompson 304" },
+           };
+
+            foreach (OfficeAssignment o in officeAssignments)
             {
-            new Signing{PlayerID=1,TrainingID=1050,Form=Form.A},
-            new Signing{PlayerID=1,TrainingID=4022,Form=Form.C},
-            new Signing{PlayerID=1,TrainingID=4041,Form=Form.B},
-            new Signing{PlayerID=2,TrainingID=1045,Form=Form.B},
-            new Signing{PlayerID=2,TrainingID=3141,Form=Form.F},
-            new Signing{PlayerID=2,TrainingID=2021,Form=Form.F},
-            new Signing{PlayerID=3,TrainingID=1050},
-            new Signing{PlayerID=4,TrainingID=1050},
-            new Signing{PlayerID=4,TrainingID=4022,Form=Form.F},
-            new Signing{PlayerID=5,TrainingID=4041,Form=Form.C},
-            new Signing{PlayerID=6,TrainingID=1045},
-            new Signing{PlayerID=7,TrainingID=3141,Form=Form.A},
+                context.OfficeAssignments.Add(o);
+            }
+            context.SaveChanges();
+
+
+            var trainingStaffs = new TrainingAssignment[]
+            {
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Stamina" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Kapoor").ID
+                    },
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Harui").ID
+                    },
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Zheng").ID
+                    },
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Zheng").ID
+                    },
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Fakhouri").ID
+                    },
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Harui").ID
+                    },
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Abercrombie").ID
+                    },
+                new TrainingAssignment {
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    StaffID = staffs.Single(i => i.LastName == "Abercrombie").ID
+                    },
             };
-            foreach (Signing e in enrollments)
+
+            foreach (TrainingAssignment ci in trainingStaffs)
             {
-                context.Signings.Add(e);
+                context.TrainingAssignments.Add(ci);
+            }
+            context.SaveChanges();
+
+
+            var signings = new Signing[]
+            {
+            
+                new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Alexander").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    Form = Form.A
+                },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Alexander").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
+                    Form = Form.C
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Alexander").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    Form = Form.B
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Alonso").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    Form = Form.B
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Alonso").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
+                    Form = Form.B
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Alonso").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID,
+                    Form = Form.B
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Anand").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Anand").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice").TrainingID,
+                    Form = Form.B
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Barzdukas").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Tactics").TrainingID,
+                    Form = Form.B
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Li").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Gym").TrainingID,
+                    Form = Form.B
+                    },
+                    new Signing {
+                    PlayerID = students.Single(s => s.LastName == "Justice").ID,
+                    TrainingID = trainings.Single(c => c.Title == "Gym").TrainingID,
+                    Form = Form.B
+                    }
+            };
+            foreach (Signing e in signings)
+            {
+                var signingInDataBase = context.Signings.Where(
+                    s =>
+                            s.Player.ID == e.PlayerID &&
+                            s.Training.TrainingID == e.TrainingID).SingleOrDefault();
+                if (signingInDataBase == null)
+                {
+                    context.Signings.Add(e);
+                }
             }
             context.SaveChanges();
         }
