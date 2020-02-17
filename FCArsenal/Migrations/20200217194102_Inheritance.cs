@@ -23,7 +23,7 @@ namespace FCArsenal.Migrations
             // Copy existing Student data into new Person table.
             migrationBuilder.Sql("INSERT INTO dbo.Person (LastName, FirstName, HireDate, SigningDate, Discriminator, OldId) SELECT LastName, FirstName, null AS HireDate, SigningDate, 'Player' AS Discriminator, ID AS OldId FROM dbo.Player");
             // Fix up existing relationships to match new PK's.
-            migrationBuilder.Sql("UPDATE dbo.Signing SET PlayerId = (SELECT ID FROM dbo.Person WHERE OldId = Enrollment.PlayerId AND Discriminator = 'Player')");
+            migrationBuilder.Sql("UPDATE dbo.Signing SET PlayerId = (SELECT ID FROM dbo.Person WHERE OldId = Signing.PlayerId AND Discriminator = 'Player')");
 
             // Remove temporary key
             migrationBuilder.DropColumn(name: "OldID", table: "Person");
