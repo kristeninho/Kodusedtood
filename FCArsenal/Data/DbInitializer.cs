@@ -10,7 +10,7 @@ namespace FCArsenal.Data
     {
         public static void Initialize(FootballContext context)
         {
-            //context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
             // Look for any students.
             if (context.Players.Any())
@@ -120,38 +120,39 @@ namespace FCArsenal.Data
 
             var trainingStaffs = new TrainingAssignment[]
             {
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Stamina" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Kapoor").ID
-                    },
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Harui").ID
-                    },
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Zheng").ID
-                    },
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Zheng").ID
-                    },
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Fakhouri").ID
-                    },
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Harui").ID
-                    },
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Abercrombie").ID
-                    },
-                new TrainingAssignment {
-                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
-                    StaffID = staffs.Single(i => i.LastName == "Abercrombie").ID
-                    },
+            new TrainingAssignment {
+                TrainingID = trainings.Single(c => c.Title == "Stamina" && c.DepartmentID == departments.Single(s => s.Name == "Stadion").DepartmentID).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Kapoor").ID
+            },
+            new TrainingAssignment {
+                TrainingID = trainings.Single(c => c.Title == "Gym" && c.DepartmentID == departments.Single(s => s.Name == "Gym").DepartmentID && c.Credits == 3).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Harui").ID
+            },
+            new TrainingAssignment {
+                TrainingID = trainings.Single(c => c.Title == "Tactics" && c.DepartmentID == departments.Single(s => s.Name == "Tactics Class").DepartmentID).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Zheng").ID
+            },
+            new TrainingAssignment {
+                TrainingID = trainings.Single(c => c.Title == "Tactics" && c.DepartmentID == departments.Single(s => s.Name == "Tactics Class").DepartmentID).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Kapoor").ID
+            },
+            new TrainingAssignment {
+                TrainingID = trainings.Single(c => c.Title == "Field practice" && c.DepartmentID == departments.Single(s => s.Name == "Grass Training Pitch").DepartmentID).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Fakhouri").ID
+            },
+            new TrainingAssignment {
+                TrainingID = trainings.Single(c => c.Title == "Gym" && c.DepartmentID == departments.Single(s => s.Name == "Gym").DepartmentID && c.Credits == 4).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Harui").ID
+            },
+            new TrainingAssignment {
+                TrainingID = trainings.Single(c => c.Title == "Field practice" && c.DepartmentID == departments.Single(s => s.Name == "Grass Training Pitch").DepartmentID).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Abercrombie").ID
+            },
+            new TrainingAssignment
+            {
+                TrainingID = trainings.Single(c => c.Title == "Field practice" && c.DepartmentID == departments.Single(s => s.Name == "Artifical Grass Training Pitch").DepartmentID).TrainingID,
+                StaffID = staffs.Single(i => i.LastName == "Abercrombie").ID
+            }
             };
 
             foreach (TrainingAssignment ci in trainingStaffs)
@@ -166,56 +167,56 @@ namespace FCArsenal.Data
             
                 new Signing {
                     PlayerID = students.Single(s => s.LastName == "Alexander").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" && c.DepartmentID == departments.Single(s => s.Name == "Grass Training Pitch").DepartmentID).TrainingID,
                     Form = Form.A
                 },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Alexander").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Tactics"  && c.DepartmentID == departments.Single(s => s.Name == "Tactics Class").DepartmentID).TrainingID,
                     Form = Form.C
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Alexander").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" && c.DepartmentID == departments.Single(s => s.Name == "Artifical Grass Training Pitch").DepartmentID).TrainingID,
                     Form = Form.B
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Alonso").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Field practice" ).TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" && c.DepartmentID == departments.Single(s => s.Name == "Grass Training Pitch").DepartmentID).TrainingID,
                     Form = Form.B
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Alonso").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Tactics" ).TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Tactics"  && c.DepartmentID == departments.Single(s => s.Name == "Tactics Class").DepartmentID).TrainingID,
                     Form = Form.B
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Alonso").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Gym" && c.DepartmentID == departments.Single(s => s.Name == "Gym").DepartmentID && c.Credits == 4).TrainingID,
                     Form = Form.B
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Anand").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Gym" ).TrainingID
+                    TrainingID = trainings.Single(c => c.Title == "Gym" && c.DepartmentID == departments.Single(s => s.Name == "Gym").DepartmentID && c.Credits == 3).TrainingID
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Anand").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Field practice").TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Field practice" && c.DepartmentID == departments.Single(s => s.Name == "Artifical Grass Training Pitch").DepartmentID).TrainingID,
                     Form = Form.B
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Barzdukas").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Tactics").TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Tactics" && c.DepartmentID == departments.Single(s => s.Name == "Tactics Class").DepartmentID).TrainingID,
                     Form = Form.B
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Li").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Gym").TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Gym" && c.DepartmentID == departments.Single(s => s.Name == "Gym").DepartmentID && c.Credits == 4).TrainingID,
                     Form = Form.B
                     },
                     new Signing {
                     PlayerID = students.Single(s => s.LastName == "Justice").ID,
-                    TrainingID = trainings.Single(c => c.Title == "Gym").TrainingID,
+                    TrainingID = trainings.Single(c => c.Title == "Gym" && c.DepartmentID == departments.Single(s => s.Name == "Gym").DepartmentID && c.Credits == 3).TrainingID,
                     Form = Form.B
                     }
             };
