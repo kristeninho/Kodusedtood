@@ -20,6 +20,8 @@ namespace FCArsenal.Data
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
         public DbSet<TrainingAssignment> TrainingAssignments { get; set; }
+        public DbSet<Person> People { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +32,7 @@ namespace FCArsenal.Data
             modelBuilder.Entity<Staff>().ToTable("Staff");
             modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignment");
             modelBuilder.Entity<TrainingAssignment>().ToTable("TrainingAssignment");
+            modelBuilder.Entity<Person>().ToTable("Person");
 
             modelBuilder.Entity<TrainingAssignment>()
                 .HasKey(c => new { c.TrainingID, c.StaffID });
