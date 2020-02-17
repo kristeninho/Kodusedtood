@@ -36,6 +36,7 @@ namespace FCArsenal.Views.Trainings
 
             var training = await _context.Trainings
                 .Include(t => t.Department)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.TrainingID == id);
             if (training == null)
             {
@@ -48,7 +49,7 @@ namespace FCArsenal.Views.Trainings
         // GET: Trainings/Create
         public IActionResult Create()
         {
-            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID");
+            PopulateDepartmentsDropDownList();
             return View();
         }
 
@@ -57,7 +58,8 @@ namespace FCArsenal.Views.Trainings
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrainingID,Title,Credits,DepartmentID")] Training training)
+        
+        public async Task<IActionResult> Create([Bind("TrainingID,Credits,DepartmentID,Title")] Training training)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +67,7 @@ namespace FCArsenal.Views.Trainings
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID", training.DepartmentID);
+            PopulateDepartmentsDropDownList(training.DepartmentID);
             return View(training);
         }
 
@@ -77,49 +79,59 @@ namespace FCArsenal.Views.Trainings
                 return NotFound();
             }
 
-            var training = await _context.Trainings.FindAsync(id);
+            var training = await _context.Trainings
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.TrainingID == id);
             if (training == null)
             {
                 return NotFound();
             }
-            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID", training.DepartmentID);
+            PopulateDepartmentsDropDownList(training.DepartmentID);
             return View(training);
         }
 
         // POST: Trainings/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TrainingID,Title,Credits,DepartmentID")] Training training)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != training.TrainingID)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var trainingToUpdate = await _context.Trainings
+                .FirstOrDefaultAsync(c => c.TrainingID == id);
+
+            if (await TryUpdateModelAsync<Training>(trainingToUpdate,
+                "",
+                c => c.Credits, c => c.DepartmentID, c => c.Title))
             {
                 try
                 {
-                    _context.Update(training);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!TrainingExists(training.TrainingID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID", training.DepartmentID);
-            return View(training);
+            PopulateDepartmentsDropDownList(trainingToUpdate.DepartmentID);
+            return View(trainingToUpdate);
+        }
+
+        private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
+        {
+            var departmentsQuery = from d in _context.Departments
+                                   orderby d.Name
+                                   select d;
+            ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "DepartmentID", "Name", selectedDepartment);
         }
 
         // GET: Trainings/Delete/5
@@ -132,6 +144,7 @@ namespace FCArsenal.Views.Trainings
 
             var training = await _context.Trainings
                 .Include(t => t.Department)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.TrainingID == id);
             if (training == null)
             {

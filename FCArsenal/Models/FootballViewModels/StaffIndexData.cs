@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FCArsenal.Models.SchoolViewModels
+namespace FCArsenal.Models.FootballViewModels
 {
     public class StaffIndexData
     {
