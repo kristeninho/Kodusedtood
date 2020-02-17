@@ -77,6 +77,9 @@ namespace FCArsenal.Views.Staffs
         // GET: Staffs/Create
         public IActionResult Create()
         {
+            var staff = new Staff();
+            staff.TrainingAssignments = new List<TrainingAssignment>();
+            PopulateAssignedTrainingData(staff);
             return View();
         }
 
@@ -85,14 +88,24 @@ namespace FCArsenal.Views.Staffs
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,LastName,FirstMidName,HireDate")] Staff staff)
+        public async Task<IActionResult> Create([Bind("FirstMidName,HireDate,LastName,OfficeAssignment")] Staff staff, string[] selectedTraining)
         {
+            if (selectedTraining != null)
+            {
+                staff.TrainingAssignments = new List<TrainingAssignment>();
+                foreach (var training in selectedTraining)
+                {
+                    var trainingToAdd = new TrainingAssignment { StaffID = staff.ID, TrainingID = int.Parse(training) };
+                    staff.TrainingAssignments.Add(trainingToAdd);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(staff);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateAssignedTrainingData(staff);
             return View(staff);
         }
 
@@ -235,15 +248,19 @@ namespace FCArsenal.Views.Staffs
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var staff = await _context.Staffs.FindAsync(id);
+            Staff staff = await _context.Staffs
+                .Include(i => i.TrainingAssignments)
+                .SingleAsync(i => i.ID == id);
+
+            var departments = await _context.Departments
+                .Where(d => d.StaffID == id)
+                .ToListAsync();
+            departments.ForEach(d => d.StaffID = null);
+
             _context.Staffs.Remove(staff);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool StaffExists(int id)
-        {
-            return _context.Staffs.Any(e => e.ID == id);
         }
     }
 }

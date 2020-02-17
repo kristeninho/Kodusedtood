@@ -23,6 +23,9 @@ namespace FCArsenal.Models
 
         public int? StaffID { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public Staff Administrator { get; set; }
         public ICollection<Training> Trainings { get; set; }
     }
