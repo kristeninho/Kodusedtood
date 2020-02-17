@@ -8,6 +8,7 @@ using FCArsenal.Models;
 using FCArsenal.Data;
 using Microsoft.EntityFrameworkCore;
 using FCArsenal.Models.FootballViewModels;
+using System.Data.Common;
 
 namespace FCArsenal.Controllers
 {
@@ -22,17 +23,38 @@ namespace FCArsenal.Controllers
 
 		public async Task<ActionResult> About()
 		{
-			IQueryable<SigningDateGroup> data =
-				from player in _context.Players
-				group player by player.SigningDate into dateGroup
-				select new SigningDateGroup()
-				{
-					SigningDate = dateGroup.Key,
-					PlayerCount = dateGroup.Count()
-				};
-			return View(await data.AsNoTracking().ToListAsync());
-		}
-		public IActionResult Index()
+            List<SigningDateGroup> groups = new List<SigningDateGroup>();
+            var conn = _context.Database.GetDbConnection();
+            try
+            {
+                await conn.OpenAsync();
+                using (var command = conn.CreateCommand())
+                {
+                    string query = "SELECT SigningDate, COUNT(*) AS PlayerCount "
+                        + "FROM Person "
+                        + "WHERE Discriminator = 'Player' "
+                        + "GROUP BY SigningDate";
+                    command.CommandText = query;
+                    DbDataReader reader = await command.ExecuteReaderAsync();
+
+                    if (reader.HasRows)
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var row = new SigningDateGroup { SigningDate = reader.GetDateTime(0), PlayerCount = reader.GetInt32(1) };
+                            groups.Add(row);
+                        }
+                    }
+                    reader.Dispose();
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return View(groups);
+        }
+        public IActionResult Index()
 		{
 			return View();
 		}

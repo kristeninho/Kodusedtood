@@ -58,7 +58,7 @@ namespace FCArsenal.Views.Trainings
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
+
         public async Task<IActionResult> Create([Bind("TrainingID,Credits,DepartmentID,Title")] Training training)
         {
             if (ModelState.IsValid)
@@ -169,5 +169,24 @@ namespace FCArsenal.Views.Trainings
         {
             return _context.Trainings.Any(e => e.TrainingID == id);
         }
+
+        public IActionResult UpdateTrainingCredits()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTrainingCredits(int? multiplier)
+        {
+            if (multiplier != null)
+            {
+                ViewData["RowsAffected"] =
+                    await _context.Database.ExecuteSqlCommandAsync(
+                        "UPDATE Training SET Credits = Credits * {0}",
+                        parameters: multiplier);
+            }
+            return View();
+        }
+
     }
 }
