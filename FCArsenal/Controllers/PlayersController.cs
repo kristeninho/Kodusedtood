@@ -20,14 +20,17 @@ namespace FCArsenal.Controllers
         }
 
         // GET: Players
-        public async Task<IActionResult> Index(string sortOrder,
-    string currentFilter,
-    string searchString,
-    int? pageNumber)
+        public async Task<IActionResult> Index(
+      string sortOrder,
+      string currentFilter,
+      string searchString,
+      int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["NameSortParm"] =
+                String.IsNullOrEmpty(sortOrder) ? "LastName_desc" : "";
+            ViewData["DateSortParm"] =
+                sortOrder == "SigningDate" ? "SigningDate_desc" : "SigningDate";
 
             if (searchString != null)
             {
@@ -37,33 +40,42 @@ namespace FCArsenal.Controllers
             {
                 searchString = currentFilter;
             }
-            
+
             ViewData["CurrentFilter"] = searchString;
 
             var players = from s in _context.Players
                            select s;
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 players = players.Where(s => s.LastName.Contains(searchString)
                                        || s.FirstMidName.Contains(searchString));
             }
-            switch (sortOrder)
+
+            if (string.IsNullOrEmpty(sortOrder))
             {
-                case "name_desc":
-                    players = players.OrderByDescending(s => s.LastName);
-                    break;
-                case "Date":
-                    players = players.OrderBy(s => s.SigningDate);
-                    break;
-                case "date_desc":
-                    players = players.OrderByDescending(s => s.SigningDate);
-                    break;
-                default:
-                    players = players.OrderBy(s => s.LastName);
-                    break;
+                sortOrder = "LastName";
             }
+
+            bool descending = false;
+            if (sortOrder.EndsWith("_desc"))
+            {
+                sortOrder = sortOrder.Substring(0, sortOrder.Length - 5);
+                descending = true;
+            }
+
+            if (descending)
+            {
+                players = players.OrderByDescending(e => EF.Property<object>(e, sortOrder));
+            }
+            else
+            {
+                players = players.OrderBy(e => EF.Property<object>(e, sortOrder));
+            }
+
             int pageSize = 3;
-            return View(await PaginatedList<Player>.CreateAsync(players.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Player>.CreateAsync(players.AsNoTracking(),
+                pageNumber ?? 1, pageSize));
         }
 
         // GET: Players/Details/5
@@ -75,10 +87,10 @@ namespace FCArsenal.Controllers
             }
 
             var player = await _context.Players
-        .Include(s => s.Signings)
+            .Include(s => s.Signings)
             .ThenInclude(e => e.Training)
-        .AsNoTracking()
-        .FirstOrDefaultAsync(m => m.ID == id);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.ID == id);
 
             if (player == null)
             {
